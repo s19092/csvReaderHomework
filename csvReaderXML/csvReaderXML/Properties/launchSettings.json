@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "csvReaderXML": {
+      "commandName": "Project",
+      "commandLineArgs": "co jest kurcze"
+    }
+  }
+}
