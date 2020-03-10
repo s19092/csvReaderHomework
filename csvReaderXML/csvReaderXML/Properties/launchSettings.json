@@ -2,7 +2,7 @@
   "profiles": {
     "csvReaderXML": {
       "commandName": "Project",
-      "commandLineArgs": "co jest kurcze"
+      "commandLineArgs": "c,<o je/st kurcze"
     }
   }
 }
