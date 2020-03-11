@@ -58,11 +58,13 @@ namespace csvReaderXML
                         Student stud = createStudent(line.Split(','));
                         if (stud != null)
                         {
-                            students.Add(stud);
+                            bool isAdded = students.Add(stud);
+                            if (!isAdded)
+                                logs.WriteLine("Value not unique: " + stud);
                         }
                         else
                         {
-                            Console.WriteLine("not add.");
+                            Console.WriteLine("Invalid value.");
                         }
                     }
 
@@ -129,7 +131,7 @@ namespace csvReaderXML
                 }
                 else
                 {
-                    logs.WriteLine("Empty values in: " + array.ToString());
+                    logs.WriteLine("Empty values in: " + string.Join(", ",array));
                     return null;
                 }
                 

@@ -48,13 +48,12 @@ namespace csvReaderXML.Models
         public override String ToString()
         {
 
-            return firstname + " ," + surname + " ," + index + " ," + motherName;
+            return firstname + ", " + surname + ", " + index + ", " + motherName;
 
         }
 
         public bool Equals([AllowNull] Student y)
         {
-            Console.WriteLine("a?");
             return (GetFirstName().Equals(y.GetFirstName()) && GetSurname().Equals(y.GetSurname()) 
                 && GetIndex() == y.GetIndex());
 
