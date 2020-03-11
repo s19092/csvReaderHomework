@@ -53,7 +53,7 @@ namespace csvReaderXML
                     StreamReader reader = new StreamReader(f.OpenRead());
                     HashSet<Student> students = new HashSet<Student>();
                     for (String line = reader.ReadLine(); line != null; line = reader.ReadLine())
-                        students.Add()
+                        
 
                     reader.Dispose();
                 }
@@ -71,7 +71,22 @@ namespace csvReaderXML
             logs.Dispose();
         }
 
+        public static Student createStudent(string[] array)
+        {
+            if (array.Length != 9)
+            {
 
+                logs.WriteLine("Invalid row: ");
+                foreach (String val in array)
+                {
+
+                }
+
+            }
+            Student result = new Student();
+            return result;
+
+        }
         public static void TestPathChars(string str)
         {
 
