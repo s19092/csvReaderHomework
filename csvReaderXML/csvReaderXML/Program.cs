@@ -1,4 +1,6 @@
-﻿using System;
+﻿using csvReaderXML.Models;
+using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace csvReaderXML
@@ -49,8 +51,11 @@ namespace csvReaderXML
                 try
                 {
                     StreamReader reader = new StreamReader(f.OpenRead());
+                    HashSet<Student> students = new HashSet<Student>();
                     for (String line = reader.ReadLine(); line != null; line = reader.ReadLine())
-                        Console.WriteLine(line);
+                        students.Add()
+
+                    reader.Dispose();
                 }
                 catch (FileNotFoundException e)
                 {
@@ -59,12 +64,11 @@ namespace csvReaderXML
                 }
 
 
-
-                logs.Dispose();
-
-
+                
+               
 
             }
+            logs.Dispose();
         }
 
 
@@ -99,7 +103,6 @@ namespace csvReaderXML
             }
 
         }
-
         public static void TestPathDestination(string str)
         {
 
