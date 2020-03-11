@@ -51,10 +51,26 @@ namespace csvReaderXML
                 try
                 {
                     StreamReader reader = new StreamReader(f.OpenRead());
-                    HashSet<Student> students = new HashSet<Student>();
+                    StudentsSet students = new StudentsSet();
                     for (String line = reader.ReadLine(); line != null; line = reader.ReadLine())
-                        
+                    {
+                      
+                        Student stud = createStudent(line.Split(','));
+                        if (stud != null)
+                        {
+                            students.Add(stud);
+                        }
+                        else
+                        {
+                            Console.WriteLine("not add.");
+                        }
+                    }
 
+                    foreach (Student s in students.GetData())
+                    {
+                        Console.WriteLine(s);
+
+                    }
                     reader.Dispose();
                 }
                 catch (FileNotFoundException e)
@@ -76,15 +92,49 @@ namespace csvReaderXML
             if (array.Length != 9)
             {
 
-                logs.WriteLine("Invalid row: ");
+                logs.Write("Invalid row: ");
                 foreach (String val in array)
                 {
-
+                    logs.Write(val + ", ");
                 }
+                return null;
+            }else{
+                bool valid = true;
+                foreach(String val in array)
+                {
+                    if (val.Equals(""))
+                        valid = false;
+                }
+                if (valid)
+                {
+                    DateTime date;
+                 
+                    if (DateTime.TryParse(array[5], out date)){
+                        try
+                        {
+                            return new Student(array[0], array[1], array[2], array[3], Int32.Parse(array[4]), date
+                                , array[6], array[7], array[8]);
+                        }catch(FormatException e)
+                        {
+                            Console.WriteLine(e.Message);
+                            logs.WriteLine(e.Message);
+                            return null;
+                        }
+                    }
+                    else
+                    {
+                        logs.WriteLine("Wrong date format.");
+                        return null;
+                    }
+                }
+                else
+                {
+                    logs.WriteLine("Empty values in: " + array.ToString());
+                    return null;
+                }
+                
 
             }
-            Student result = new Student();
-            return result;
 
         }
         public static void TestPathChars(string str)
@@ -118,12 +168,7 @@ namespace csvReaderXML
             }
 
         }
-        public static void TestPathDestination(string str)
-        {
-
-            
-
-        }
+       
 
     }
 

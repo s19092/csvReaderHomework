@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace csvReaderXML.Models
 {
     public class Student
-        : IEquatable<Student>
+    
     {
 
         String firstname, surname, studies, mode, email, motherName, fatherName;
@@ -12,7 +13,7 @@ namespace csvReaderXML.Models
         DateTime date;
         public Student() { 
         }
-        public Student(String firstName,string surname,string studies,string mode,, int index, DateTime date
+        public Student(String firstName,string surname,string studies,string mode, int index, DateTime date
             ,String email,String motherName,String fatherName)
         {
             this.firstname = firstName;
@@ -21,18 +22,43 @@ namespace csvReaderXML.Models
             this.mode = mode;
             this.date = date;
             this.email = email;
+            this.index = index;
             this.motherName = motherName;
             this.fatherName = fatherName;
 
         }
 
-
-        public bool Equals( Student other)
+        public String GetSurname()
         {
-            Console.WriteLine("EKUAL");
-            if (this.firstname.Equals(other.firstname) && this.surname.Equals(other.surname) && this.index == other.index)
-                return true;
-            return false;
+            return surname;
+        }
+
+        public int GetIndex()
+        {
+            return index;
+        }
+
+        public String GetFirstName()
+        {
+            return surname;
+        }
+
+
+
+        public override String ToString()
+        {
+
+            return firstname + " ," + surname + " ," + index + " ," + motherName;
+
+        }
+
+        public bool Equals([AllowNull] Student y)
+        {
+            Console.WriteLine("a?");
+            return (GetFirstName().Equals(y.GetFirstName()) && GetSurname().Equals(y.GetSurname()) 
+                && GetIndex() == y.GetIndex());
+
         }
     }
+
 }
