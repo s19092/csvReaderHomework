@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace csvReaderXML
 {
@@ -14,7 +16,7 @@ namespace csvReaderXML
         static String DEFAULT_TARGET_PATH = "result.xml";
         static String DEFAULT_FORMAT = "xml";
         static void Main(string[] args)
-        {
+            {
 
             String sourcePath,
                    targetPath,
@@ -54,7 +56,7 @@ namespace csvReaderXML
                     StudentsSet students = new StudentsSet();
                     for (String line = reader.ReadLine(); line != null; line = reader.ReadLine())
                     {
-                      
+
                         Student stud = createStudent(line.Split(','));
                         if (stud != null)
                         {
@@ -67,13 +69,32 @@ namespace csvReaderXML
                             Console.WriteLine("Invalid value.");
                         }
                     }
-
-                    foreach (Student s in students.GetData())
-                    {
-                        Console.WriteLine(s);
-
-                    }
                     reader.Dispose();
+
+                    FileStream writer = new FileStream(targetPath, FileMode.Create);
+
+                    String dateT = DateTime.Now.ToString("dd.MM.yyy");
+
+                    XmlDocument doc = new XmlDocument();
+                    doc.LoadXml("<uczelnia " + "createdAt='" + dateT +"' author='Piotr Adarczyn'>" +"</uczelnia>");
+                    XmlNode root = doc.DocumentElement;
+                   
+
+                    
+                    doc.Save(writer);
+                    writer.Dispose();
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    doc.Save(Console.Out);
+
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine();
+
+
                 }
                 catch (FileNotFoundException e)
                 {

@@ -1,8 +1,7 @@
 {
   "profiles": {
     "csvReaderXML": {
-      "commandName": "Project",
-      "commandLineArgs": "X|D j\"e\"st kurcze"
+      "commandName": "Project"
     }
   }
 }

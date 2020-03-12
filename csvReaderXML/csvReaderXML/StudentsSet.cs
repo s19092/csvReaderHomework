@@ -2,12 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace csvReaderXML
 {
     class StudentsSet
     {
 
+        [XmlElement(elementName: "XDD")]
         List<Student> data = new List<Student>();
 
         public bool Add(Student stud)

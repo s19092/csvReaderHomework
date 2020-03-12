@@ -1,16 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Xml.Serialization;
 
 namespace csvReaderXML.Models
 {
+
     public class Student
     
     {
 
-        String firstname, surname, studies, mode, email, motherName, fatherName;
-        int index;
-        DateTime date;
+        [XmlElement(elementName: "fname")]
+        public String firstname { get; set; }
+
+        [XmlElement(elementName: "lname")]
+        public String surname { get; set; }
+
+        [XmlElement(elementName: "studies")]
+        public String studies { get; set; }
+
+        [XmlElement(elementName: "mode")]
+        public String mode { get; set; }
+
+        [XmlElement(elementName: "email")]
+        public String email { get; set; }
+
+        [XmlElement(elementName: "motherName")]
+        public String motherName { get; set; }
+
+        [XmlElement(elementName: "fatherName")]
+        public String fatherName { get; set; }
+
+        [XmlElement(elementName: "index")]
+        public int index { get; set; }
+
+        [XmlElement(elementName: "birthdate")]
+        public DateTime date { get; set; }
+    
         public Student() { 
         }
         public Student(String firstName,string surname,string studies,string mode, int index, DateTime date
