@@ -54,6 +54,7 @@ namespace csvReaderXML
                 {
                     StreamReader reader = new StreamReader(f.OpenRead());
                     StudentsSet students = new StudentsSet();
+                    Dictionary<String, List<Student>> map = new Dictionary<string, List<Student>>();
                     for (String line = reader.ReadLine(); line != null; line = reader.ReadLine())
                     {
 
@@ -63,6 +64,11 @@ namespace csvReaderXML
                             bool isAdded = students.Add(stud);
                             if (!isAdded)
                                 logs.WriteLine("Value not unique: " + stud);
+                            else
+                            {
+                                map.Add(stud.studies, new List<Student>());
+
+                            }
                         }
                         else
                         {
@@ -70,6 +76,8 @@ namespace csvReaderXML
                         }
                     }
                     reader.Dispose();
+
+
 
                     FileStream writer = new FileStream(targetPath, FileMode.Create);
 
@@ -86,6 +94,12 @@ namespace csvReaderXML
 
                         e.AppendChild(CreateStudXml(s,doc));
 
+                    }
+                    XmlNode activiaActireguralis = doc.CreateElement("activeStudies");
+                    XmlElement studiesName = doc.CreateElement("studies");
+                    foreach (KeyValuePair<string, List<Student>> entry in map)
+                    {
+                        studiesName.SetAttribute("name",(String.Join("",entry.Value.Count)));
                     }
                     
 
@@ -157,7 +171,6 @@ namespace csvReaderXML
             XmlElement fatherN = doc.CreateElement("fathersName");
             fatherN.InnerText = stud.fatherName;
             result.AppendChild(fatherN);
-
 
             XmlNode studies = doc.CreateElement("studies");
             XmlElement name = doc.CreateElement("name");
