@@ -76,11 +76,25 @@ namespace csvReaderXML
                     String dateT = DateTime.Now.ToString("dd.MM.yyy");
 
                     XmlDocument doc = new XmlDocument();
-                    doc.LoadXml("<uczelnia " + "createdAt='" + dateT +"' author='Piotr Adarczyn'>" +"</uczelnia>");
-                    XmlNode root = doc.DocumentElement;
-                   
+                    doc.LoadXml("<uczelnia></uczelnia>");
+                    XmlElement root = doc.DocumentElement;
+                    root.SetAttribute("createdAt", dateT);
+                    root.SetAttribute("author", "Piotr Adarczyn");
+                    XmlNode e = doc.CreateElement("studenci");
+                    foreach (Student s in students.GetData())
+                    {
 
+                        e.AppendChild(CreateStudXml(s,doc));
+
+                    }
                     
+
+
+
+                    root.AppendChild(e);
+
+
+
                     doc.Save(writer);
                     writer.Dispose();
                     Console.WriteLine();
@@ -110,6 +124,56 @@ namespace csvReaderXML
             logs.Dispose();
         }
 
+        public static XmlElement CreateStudXml(Student stud,XmlDocument doc)
+        {
+
+            XmlElement result = doc.CreateElement("student");
+            String index = "s" + stud.index;
+            
+            result.SetAttribute("indexNumber", index);
+            
+           
+            XmlElement firstName = doc.CreateElement("fname");
+            firstName.InnerText = stud.firstname;
+            result.AppendChild(firstName);
+
+            XmlElement surName = doc.CreateElement("lname");
+            surName.InnerText = stud.surname;
+            result.AppendChild(surName);
+
+            XmlElement birb = doc.CreateElement("birthdate");
+            birb.InnerText = stud.date.ToString("dd.MM.yyy");
+            result.AppendChild(birb);
+
+            XmlElement email = doc.CreateElement("email");
+            email.InnerText = stud.email;
+            result.AppendChild(email);
+
+
+            XmlElement motherN = doc.CreateElement("mothersName");
+            motherN.InnerText = stud.motherName;
+            result.AppendChild(motherN);
+
+            XmlElement fatherN = doc.CreateElement("fathersName");
+            fatherN.InnerText = stud.fatherName;
+            result.AppendChild(fatherN);
+
+
+            XmlNode studies = doc.CreateElement("studies");
+            XmlElement name = doc.CreateElement("name");
+            name.InnerText = stud.studies;
+            
+            XmlElement mode = doc.CreateElement("mode");
+            mode.InnerText = stud.mode;
+
+
+            studies.AppendChild(name);
+            studies.AppendChild(mode);
+            result.AppendChild(studies);
+
+            return result;
+
+        }
         public static Student createStudent(string[] array)
         {
             if (array.Length != 9)

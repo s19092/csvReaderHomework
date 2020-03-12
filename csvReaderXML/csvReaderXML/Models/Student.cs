@@ -10,19 +10,14 @@ namespace csvReaderXML.Models
     
     {
 
-        [XmlElement(elementName: "fname")]
         public String firstname { get; set; }
 
-        [XmlElement(elementName: "lname")]
         public String surname { get; set; }
 
-        [XmlElement(elementName: "studies")]
         public String studies { get; set; }
 
-        [XmlElement(elementName: "mode")]
         public String mode { get; set; }
 
-        [XmlElement(elementName: "email")]
         public String email { get; set; }
 
         [XmlElement(elementName: "motherName")]
