@@ -14,9 +14,8 @@ namespace csvReaderXML.Models
 
         public String surname { get; set; }
 
-        public String studies { get; set; }
-
-        public String mode { get; set; }
+        public Studies studies { get; set; }
+        
 
         public String email { get; set; }
 
@@ -39,8 +38,7 @@ namespace csvReaderXML.Models
         {
             this.firstname = firstName;
             this.surname = surname;
-            this.studies = studies;
-            this.mode = mode;
+            this.studies = new Studies(studies, mode);
             this.date = date;
             this.email = email;
             this.index = index;

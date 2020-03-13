@@ -66,7 +66,23 @@ namespace csvReaderXML
                                 logs.WriteLine("Value not unique: " + stud);
                             else
                             {
-                                map.Add(stud.studies, new List<Student>());
+                                try
+                                {
+
+                                    List<Student> value;
+                                    map.Add(stud.studies.name, new List<Student>());
+                                    map.TryGetValue(stud.studies.name, out value);
+                                    value.Add(stud);
+                                    Console.WriteLine(stud.studies);
+                                }
+                                catch (ArgumentException) {
+
+                                    List<Student> value;
+                                    map.TryGetValue(stud.studies.name, out value);
+                                    value.Add(stud);
+
+                                }
+                                                                
 
                             }
                         }
@@ -88,24 +104,24 @@ namespace csvReaderXML
                     XmlElement root = doc.DocumentElement;
                     root.SetAttribute("createdAt", dateT);
                     root.SetAttribute("author", "Piotr Adarczyn");
-                    XmlNode e = doc.CreateElement("studenci");
+                    XmlNode studenciXML = doc.CreateElement("studenci");
                     foreach (Student s in students.GetData())
                     {
 
-                        e.AppendChild(CreateStudXml(s,doc));
+                        studenciXML.AppendChild(CreateStudXml(s,doc));
 
                     }
-                    XmlNode activiaActireguralis = doc.CreateElement("activeStudies");
-                    XmlElement studiesName = doc.CreateElement("studies");
+                    XmlNode activeStudiesXML = doc.CreateElement("activeStudies");
                     foreach (KeyValuePair<string, List<Student>> entry in map)
                     {
-                        studiesName.SetAttribute("name",(String.Join("",entry.Value.Count)));
-                    }
-                    
+                        XmlElement studiesNameXML = doc.CreateElement("studies");
+                        studiesNameXML.SetAttribute("name", entry.Key);
+                        studiesNameXML.SetAttribute("numberOfStudents", entry.Value.Count.ToString());
+                        activeStudiesXML.AppendChild(studiesNameXML);
+                    }   
 
-
-
-                    root.AppendChild(e);
+                    root.AppendChild(studenciXML);
+                    root.AppendChild(activeStudiesXML);
 
 
 
@@ -174,10 +190,10 @@ namespace csvReaderXML
 
             XmlNode studies = doc.CreateElement("studies");
             XmlElement name = doc.CreateElement("name");
-            name.InnerText = stud.studies;
+            name.InnerText = stud.studies.name ;
             
             XmlElement mode = doc.CreateElement("mode");
-            mode.InnerText = stud.mode;
+            mode.InnerText = stud.studies.mode;
 
 
             studies.AppendChild(name);
