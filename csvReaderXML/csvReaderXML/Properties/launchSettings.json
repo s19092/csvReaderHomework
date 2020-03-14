@@ -1,7 +1,8 @@
 {
   "profiles": {
     "csvReaderXML": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "a,\\s q,; JSON"
     }
   }
 }

@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
 using System.Xml;
 using System.Xml.Serialization;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace csvReaderXML
 {
@@ -26,8 +28,14 @@ namespace csvReaderXML
 
                 sourcePath = SetAsPath(args[0], DEFAULT_SOURCE_PATH);
                 targetPath = SetAsPath(args[1], DEFAULT_TARGET_PATH);
-                format = args[2];
-
+                try
+                {
+                    format = SetFormat(args[2]);
+                }catch(ArgumentException e)
+                {
+                    format = "XML";
+                    logs.Write("Wrong argument.");
+                }
             }
             else
             {
@@ -42,8 +50,9 @@ namespace csvReaderXML
             {
                 f = new FileInfo(sourcePath);
             }
-            catch (FileNotFoundException e)
+            catch (DirectoryNotFoundException e)
             {
+                f = new FileInfo(DEFAULT_SOURCE_PATH);
                 Console.WriteLine(e.Message);
                 logs.WriteLine(e.Message);
             }
@@ -52,7 +61,19 @@ namespace csvReaderXML
             {
                 try
                 {
-                    StreamReader reader = new StreamReader(f.OpenRead());
+                    StreamReader reader = null;
+                    try
+                    {
+                        reader = new StreamReader(f.OpenRead());
+                    }catch(IOException e)
+                    {
+                        reader = new StreamReader(new FileInfo(DEFAULT_SOURCE_PATH).OpenRead());
+                    }
+                    finally
+                    {
+                        logs.WriteLine("Data doesn't exists.");
+                        
+                    }
                     StudentsSet students = new StudentsSet();
                     Dictionary<String, List<Student>> map = new Dictionary<string, List<Student>>();
                     for (String line = reader.ReadLine(); line != null; line = reader.ReadLine())
@@ -96,43 +117,61 @@ namespace csvReaderXML
 
 
                     FileStream writer = new FileStream(targetPath, FileMode.Create);
+                
+                    if (format.ToUpper().Equals("XML")){
 
-                    String dateT = DateTime.Now.ToString("dd.MM.yyy");
+                        String dateT = DateTime.Now.ToString("dd.MM.yyy");
 
-                    XmlDocument doc = new XmlDocument();
-                    doc.LoadXml("<uczelnia></uczelnia>");
-                    XmlElement root = doc.DocumentElement;
-                    root.SetAttribute("createdAt", dateT);
-                    root.SetAttribute("author", "Piotr Adarczyn");
-                    XmlNode studenciXML = doc.CreateElement("studenci");
-                    foreach (Student s in students.GetData())
-                    {
+                        XmlDocument doc = new XmlDocument();
+                        doc.LoadXml("<uczelnia></uczelnia>");
+                        XmlElement root = doc.DocumentElement;
+                        root.SetAttribute("createdAt", dateT);
+                        root.SetAttribute("author", "Piotr Adarczyn");
+                        XmlNode studenciXML = doc.CreateElement("studenci");
+                        foreach (Student s in students.GetData())
+                        {
 
-                        studenciXML.AppendChild(CreateStudXml(s,doc));
+                            studenciXML.AppendChild(CreateStudentXml(s, doc));
+
+                        }
+                        XmlNode activeStudiesXML = doc.CreateElement("activeStudies");
+                        foreach (KeyValuePair<string, List<Student>> entry in map)
+                        {
+                            XmlElement studiesNameXML = doc.CreateElement("studies");
+                            studiesNameXML.SetAttribute("name", entry.Key);
+                            studiesNameXML.SetAttribute("numberOfStudents", entry.Value.Count.ToString());
+                            activeStudiesXML.AppendChild(studiesNameXML);
+                        }
+
+                        root.AppendChild(studenciXML);
+                        root.AppendChild(activeStudiesXML);
+                        doc.Save(writer);
+                        doc.Save(Console.Out);
 
                     }
-                    XmlNode activeStudiesXML = doc.CreateElement("activeStudies");
-                    foreach (KeyValuePair<string, List<Student>> entry in map)
+                    else
                     {
-                        XmlElement studiesNameXML = doc.CreateElement("studies");
-                        studiesNameXML.SetAttribute("name", entry.Key);
-                        studiesNameXML.SetAttribute("numberOfStudents", entry.Value.Count.ToString());
-                        activeStudiesXML.AppendChild(studiesNameXML);
-                    }   
 
-                    root.AppendChild(studenciXML);
-                    root.AppendChild(activeStudiesXML);
+                        var list = new List<Student>();
+                        foreach (Student stud in students.GetData())
+                        {
+                            list.Add(stud);
 
+                        }
+                        var jsonString = JsonSerializer.Serialize(list);
+                        Console.WriteLine(jsonString);
 
-
-                    doc.Save(writer);
+                    }
+               
+                   
+                    
                     writer.Dispose();
                     Console.WriteLine();
                     Console.WriteLine();
                     Console.WriteLine();
                     Console.WriteLine();
                     Console.WriteLine();
-                    doc.Save(Console.Out);
+                    
 
                     Console.WriteLine();
                     Console.WriteLine();
@@ -154,7 +193,7 @@ namespace csvReaderXML
             logs.Dispose();
         }
 
-        public static XmlElement CreateStudXml(Student stud,XmlDocument doc)
+        public static XmlElement CreateStudentXml(Student stud,XmlDocument doc)
         {
 
             XmlElement result = doc.CreateElement("student");
@@ -282,6 +321,18 @@ namespace csvReaderXML
                 Console.WriteLine(e.Message);
                 return def;
             }
+
+        }
+        public static String SetFormat(string str)
+        {
+
+            if (str.ToUpper().Equals("JSON"))
+              return str;
+            if (str.ToUpper().Equals("XML"))
+                return str;
+            else
+                throw new ArgumentException();
+
 
         }
        

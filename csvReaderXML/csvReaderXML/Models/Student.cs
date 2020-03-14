@@ -9,7 +9,7 @@ namespace csvReaderXML.Models
     public class Student
     
     {
-
+       
         public String firstname { get; set; }
 
         public String surname { get; set; }
