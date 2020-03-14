@@ -151,7 +151,6 @@ namespace csvReaderXML
                     }
                     else
                     {
-
                         var list = new List<Student>();
                         foreach (Student stud in students.GetData())
                         {
@@ -159,6 +158,7 @@ namespace csvReaderXML
 
                         }
                         var jsonString = JsonSerializer.Serialize(list);
+                        jsonString = JsonSerializer.Serialize(map);
                         Console.WriteLine(jsonString);
 
                     }
